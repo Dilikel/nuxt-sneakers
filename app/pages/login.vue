@@ -1,0 +1,144 @@
+<script setup lang="ts">
+import { useToast } from 'vue-toastification'
+import { useUserStore } from '~/stores/user'
+import type { LoginResponse } from '~/types/user'
+
+definePageMeta({
+	middleware: ['auth'],
+})
+
+useHead({
+	title: 'Вход',
+})
+
+const email = ref('')
+const password = ref('')
+const message = ref('')
+const isLoading = ref(false)
+const config = useRuntimeConfig()
+const toast = useToast()
+const userStore = useUserStore()
+const token = useCookie<string | null>('token', { maxAge: 60 * 60 * 24 * 30 })
+
+async function loginUser() {
+	if (!email.value || !password.value) {
+		toast.error('Заполните все поля!')
+		return
+	}
+
+	isLoading.value = true
+	message.value = ''
+
+	await $fetch<LoginResponse>(`${config.public.API_URL}/auth`, {
+		method: 'POST',
+		body: { email: email.value, password: password.value },
+	})
+		.then((response: LoginResponse) => {
+			token.value = response.token
+			userStore.setUser(response.data)
+			toast.success('Вы успешно вошли в аккаунт!')
+			navigateTo('/')
+		})
+		.catch((error: any) => {
+			message.value =
+				error?.response?.data?.detail || 'Ошибка. Проверьте Email и пароль.'
+			toast.error(message.value)
+		})
+		.finally(() => {
+			isLoading.value = false
+		})
+}
+</script>
+
+<template>
+	<div
+		class="flex items-center justify-center min-h-[80vh] animate__animated animate__fadeIn animate__fast max-md:p-4"
+	>
+		<div
+			class="max-w-md w-full bg-white rounded-xl shadow-xl p-8 md:p-10 border border-gray-200"
+		>
+			<h2
+				class="text-3xl font-semibold text-center text-gray-800 mb-6 max-md:text-2xl"
+			>
+				Добро пожаловать!
+			</h2>
+			<p class="text-center text-gray-500 mb-8 max-md:text-sm">
+				Пожалуйста, войдите в свою учетную запись
+			</p>
+
+			<form @submit.prevent="loginUser" class="space-y-6">
+				<div>
+					<label for="email" class="block text-sm font-medium text-gray-700"
+						>Email</label
+					>
+					<input
+						id="email"
+						type="email"
+						v-model="email"
+						required
+						class="mt-1 block w-full px-4 py-2 border rounded-md border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+						placeholder="Введите ваш email"
+					/>
+				</div>
+
+				<div>
+					<label for="password" class="block text-sm font-medium text-gray-700"
+						>Пароль</label
+					>
+					<input
+						id="password"
+						type="password"
+						v-model="password"
+						required
+						class="mt-1 block w-full px-4 py-2 border rounded-md border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+						placeholder="Введите ваш пароль"
+					/>
+				</div>
+
+				<div class="flex items-center justify-between">
+					<label class="flex items-center text-sm text-gray-600">
+						<input type="checkbox" class="mr-2 leading-tight" />
+						Запомнить меня
+					</label>
+					<a href="#" class="text-sm text-blue-500 hover:text-blue-600"
+						>Забыли пароль?</a
+					>
+				</div>
+
+				<div class="mt-6">
+					<button
+						type="submit"
+						class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg text-lg font-semibold hover:bg-blue-600 focus:outline-none focus:ring-2 cursor-pointer"
+					>
+						{{ isLoading ? 'Загрузка...' : 'Войти' }}
+					</button>
+				</div>
+			</form>
+
+			<div class="mt-8 text-center">
+				<p class="text-sm text-gray-500">
+					Нет аккаунта?
+					<router-link to="/signup" class="text-blue-500 hover:text-blue-600"
+						>Зарегистрируйтесь</router-link
+					>
+				</p>
+			</div>
+
+			<div
+				class="flex items-center justify-center gap-4 mt-5 p-4 rounded-2xl text-center font-bold bg-[#ff5252] shadow-lg shadow-red-500/40 ring-1 ring-red-600/30 text-white animate__animated animate__fadeIn animate__fast max-md:p-3 max-md:text-base max-sm:p-[10px] max-sm:text-sm"
+				v-if="message"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					class="w-7 h-7 flex-shrink-0 fill-white"
+				>
+					<path
+						d="M12 0C5.371 0 0 5.372 0 12s5.371 12 12 12 12-5.372 12-12S18.629 0 12 0zM13.5 18h-3v-3h3v3zm0-6h-3V6h3v6z"
+					/>
+				</svg>
+				<p class="text-base leading-relaxed m-0">{{ message }}</p>
+			</div>
+		</div>
+	</div>
+</template>
