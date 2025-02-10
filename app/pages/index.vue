@@ -23,7 +23,12 @@ async function fetchItems() {
 		params,
 	})
 		.then((response: sneaker[]) => {
-			items.value = response
+			items.value = response.map(obj => ({
+				...obj,
+				isFavorite: false,
+				favoriteId: null,
+				isAdded: false,
+			}))
 		})
 		.catch(error => {
 			console.error(error)

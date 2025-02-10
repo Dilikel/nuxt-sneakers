@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import type { User } from '@/types/user'
 
 export const useUserStore = defineStore('UserStore', {
-	state: (): { user: Pick<User, 'id' | 'name' | 'email' | 'totalPrice'> } => ({
+	state: (): { user: User } => ({
 		user: {
 			id: 0,
 			name: '',
@@ -11,7 +11,7 @@ export const useUserStore = defineStore('UserStore', {
 		},
 	}),
 	actions: {
-		setUser(userData: Pick<User, 'id' | 'name' | 'email' | 'totalPrice'>) {
+		setUser(userData: User) {
 			this.user = userData
 		},
 		logout() {
@@ -19,7 +19,7 @@ export const useUserStore = defineStore('UserStore', {
 		},
 	},
 	getters: {
-		getUser(): Pick<User, 'id' | 'name' | 'email' | 'totalPrice'> {
+		getUser(): User {
 			return this.user
 		},
 	},
