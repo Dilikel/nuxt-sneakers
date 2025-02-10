@@ -3,6 +3,10 @@ import CardList from '~/components/CardList.vue'
 import type { sneaker } from '~/types/sneaker'
 import Loader from '~/components/Loader.vue'
 
+useHead({
+	title: 'Главная',
+})
+
 const config = useRuntimeConfig()
 const items = ref<sneaker[]>([])
 const filters = reactive({

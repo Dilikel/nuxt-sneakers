@@ -6,6 +6,14 @@ const sneaker = ref<Partial<sneaker>>({})
 const isLoading = ref(true)
 const config = useRuntimeConfig()
 
+watchEffect(() => {
+	if (sneaker.value.title) {
+		useHead({
+			title: sneaker.value.title,
+		})
+	}
+})
+
 async function fetchSneaker() {
 	await $fetch<sneaker>(
 		`${config.public.API_URL}/items/${useRoute().params.id}`
@@ -27,9 +35,6 @@ onMounted(() => {
 </script>
 
 <template>
-	<Head>
-		<Title>{{ sneaker.title }}</Title>
-	</Head>
 	<Loader v-if="isLoading" />
 	<div v-else class="min-h-[80vh] bg-gradient-to-br py-12">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
