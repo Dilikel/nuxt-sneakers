@@ -1,9 +1,11 @@
 import { useUserStore } from '@/stores/user'
 import type { LoginResponse } from '~/types/user'
+import { useToast } from 'vue-toastification'
 
 export function useAuth() {
 	const userStore = useUserStore()
 	const config = useRuntimeConfig()
+	const toast = useToast()
 
 	async function fetchUser() {
 		const token = useCookie('token')
@@ -21,7 +23,9 @@ export function useAuth() {
 				userStore.setUser(response)
 			})
 			.catch((error: any) => {
-				console.log(error)
+				token.value = null
+				toast.error('Ошибка при авторизации')
+				navigateTo('/login')
 			})
 	}
 

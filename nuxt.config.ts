@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 			charset: 'utf-8',
 			viewport: 'width=device-width, initial-scale=1',
 			title: 'Nuxt Sneakers',
-			link: [{ rel: 'icon', type: 'svg', href: '/logo.svg' }],
+			link: [{ rel: 'icon', type: 'svg', href: '~/assets/icons/logo.svg' }],
 		},
 	},
 	runtimeConfig: {
