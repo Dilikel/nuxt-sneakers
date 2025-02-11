@@ -8,3 +8,10 @@ export interface sneaker {
 	onClickFavorite?: () => void
 	onClickAdd?: () => void
 }
+
+export interface cartItem {
+	id: number
+	title: string
+	price: number
+	imageUrl: string
+}

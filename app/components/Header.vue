@@ -1,11 +1,14 @@
 <script setup>
-const isMenuOpen = ref(false)
-const totalPrice = 0
-</script>
+import { useTotalPriceStore } from '~/stores/totalPrice'
+import { storeToRefs } from 'pinia'
 
+const isMenuOpen = ref(false)
+const totalPriceStore = useTotalPriceStore()
+const { totalPrice } = storeToRefs(totalPriceStore)
+</script>
 <template>
 	<header
-		class="py-[20px] border-b-2 border-b-solid border-b-[rgba(0,0,0,0.082)]"
+		class="py-[20px] border-b-2 border-b-solid border-b-[rgba(0,0,0,0.082)] sticky top-0 bg-white z-50"
 	>
 		<div class="flex items-center justify-between px-5 max-w-[1400px] mx-auto">
 			<router-link to="/" class="flex items-center center gap-[15px]">
@@ -20,12 +23,13 @@ const totalPrice = 0
 				</div>
 			</router-link>
 			<ul class="flex items-center list-none gap-[40px] m-0 p-0 max-md:hidden">
-				<li
+				<router-link
+					to="/cart"
 					class="flex items-center gap-3 cursor-pointer text-gray-500 transition-colors duration-300 ease-in-out hover:text-black"
 				>
 					<img src="~/assets/icons/cart.svg" alt="Cart" class="select-none" />
 					<b>{{ totalPrice }} руб.</b>
-				</li>
+				</router-link>
 				<li
 					class="flex items-center gap-3 cursor-pointer text-gray-500 transition-colors duration-300 ease-in-out hover:text-black"
 				>

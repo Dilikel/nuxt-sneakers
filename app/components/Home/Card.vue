@@ -1,12 +1,20 @@
-<script setup lang="ts">
-import type { sneaker } from '~/types/sneaker'
+<script setup>
 import like1 from '~/assets/icons/like-1.svg'
 import like2 from '~/assets/icons/like-2.svg'
 import plusIcon from '~/assets/icons/plus.svg'
 import checkedIcon from '~/assets/icons/checked.svg'
 import { useRouter } from 'vue-router'
 
-const props = defineProps<sneaker>()
+const props = defineProps({
+	id: Number,
+	title: String,
+	imageUrl: String,
+	price: Number,
+	isFavorite: Boolean,
+	isAdded: Boolean,
+	onClickFavorite: Function,
+	onClickAdd: Function,
+})
 const router = useRouter()
 const goToSneaker = () => {
 	router.push(`/sneaker/${props.id}`)

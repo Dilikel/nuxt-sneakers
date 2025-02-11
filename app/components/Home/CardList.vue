@@ -1,12 +1,10 @@
-<script setup lang="ts">
-import type { sneaker } from '~/types/sneaker'
+<script setup>
 import Card from './Card.vue'
 
-const props = defineProps<{
-	items: sneaker[]
-	isFavorites: boolean
-}>()
-
+defineProps({
+	items: Array,
+	isFavorites: Boolean,
+})
 const emit = defineEmits(['addToFavorite', 'addToCart'])
 </script>
 
@@ -22,10 +20,8 @@ const emit = defineEmits(['addToFavorite', 'addToCart'])
 			:title="item.title"
 			:imageUrl="item.imageUrl"
 			:price="item.price"
-			:onClickFavorite="
-				isFavorites ? undefined : () => emit('addToFavorite', item)
-			"
-			:onClickAdd="isFavorites ? undefined : () => emit('addToCart', item)"
+			:onClickFavorite="isFavorites ? null : () => emit('addToFavorite', item)"
+			:onClickAdd="isFavorites ? null : () => emit('addToCart', item)"
 			:isFavorite="item.isFavorite"
 			:isAdded="item.isAdded"
 		/>

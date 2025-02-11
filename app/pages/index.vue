@@ -1,65 +1,94 @@
-<script setup lang="ts">
-import CardList from '~/components/CardList.vue'
-import type { sneaker } from '~/types/sneaker'
+<script setup>
+import CardList from '~/components/Home/CardList.vue'
 import Loader from '~/components/Loader.vue'
+import { useTotalPriceStore } from '~/stores/totalPrice'
 
 useHead({
 	title: 'Главная',
 })
 
 const config = useRuntimeConfig()
-const items = ref<sneaker[]>([])
+const items = ref([])
+const isLoading = ref(true)
+const totalPriceStore = useTotalPriceStore()
 const filters = reactive({
 	sortBy: 'title',
 	searchQuery: '',
 })
+const cart = ref([])
 
 async function fetchItems() {
-	const params: Record<string, string> = {
+	const params = {
 		sortBy: filters.sortBy,
 	}
-
 	if (filters.searchQuery) {
 		params['title'] = `*${filters.searchQuery}*`
 	}
-	await $fetch<sneaker[]>(`${config.public.API_URL}/items`, {
+	await $fetch(`${config.public.API_URL}/items`, {
 		method: 'GET',
 		params,
 	})
-		.then((response: sneaker[]) => {
+		.then(response => {
 			items.value = response.map(obj => ({
 				...obj,
 				isFavorite: false,
 				favoriteId: null,
-				isAdded: false,
+				isAdded: cart.value.some(item => item.id === obj.id),
 			}))
 		})
 		.catch(error => {
 			console.error(error)
 		})
+		.finally(() => {
+			isLoading.value = false
+		})
 }
 
-const onChangeSelect = (event: Event) => {
-	const target = event.target as HTMLSelectElement
-	filters.sortBy = target.value
+const onChangeSelect = event => {
+	filters.sortBy = event.target.value
 }
 
-const onChangeSearchInput = (event: Event) => {
-	const target = event.target as HTMLInputElement
-	filters.searchQuery = target.value
+const onChangeSearchInput = event => {
+	filters.searchQuery = event.target.value
 }
 
-watch(filters, async () => {
+const onClickAddPlus = item => {
+	if (!item.isAdded) {
+		cart.value.push({ ...item, isAdded: true })
+		item.isAdded = true
+	} else {
+		cart.value = cart.value.filter(cartItem => cartItem.id !== item.id)
+		item.isAdded = false
+	}
+}
+
+watch(
+	cart,
+	() => {
+		localStorage.setItem('cart', JSON.stringify(cart.value))
+		totalPriceStore.updatePrice(
+			cart.value.reduce((acc, item) => acc + item.price, 0)
+		)
+	},
+	{ deep: true }
+)
+
+onMounted(async () => {
+	const localCart = localStorage.getItem('cart')
+	if (localCart) {
+		cart.value = JSON.parse(localCart)
+	}
 	await fetchItems()
 })
-onMounted(async () => {
+
+watch(filters, async () => {
 	await fetchItems()
 })
 </script>
 
 <template>
-	<Loader v-if="!items.length" />
-	<div class="max-w-[1400px] w-full px-5 mx-auto min-h-[100vh]">
+	<Loader v-if="isLoading" />
+	<div v-else class="max-w-[1400px] w-full px-5 mx-auto min-h-[100vh]">
 		<h2
 			class="text-2xl font-bold mt-[10px] mb-[10px] text-center text-gray-800"
 		>
@@ -89,6 +118,10 @@ onMounted(async () => {
 				<option value="-price">По цене (дорогие)</option>
 			</select>
 		</div>
-		<CardList :items="items" :isFavorites="false" />
+		<CardList
+			:items="items"
+			:isFavorites="false"
+			@add-to-cart="onClickAddPlus"
+		/>
 	</div>
 </template>
