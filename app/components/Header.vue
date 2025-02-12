@@ -2,6 +2,7 @@
 import { useCartStore } from '~/stores/cart'
 import { storeToRefs } from 'pinia'
 
+const isMenuOpen = ref(false)
 const cartStore = useCartStore()
 const { totalPrice } = storeToRefs(cartStore)
 </script>
@@ -74,7 +75,7 @@ const { totalPrice } = storeToRefs(cartStore)
 	></div>
 	<div
 		v-if="isMenuOpen"
-		class="fixed top-0 right-0 w-[300px] h-full bg-white border-b-2 border-opacity-10 border-black transition-[right] duration-300 ease-in-out z-[1000]"
+		class="fixed top-0 right-0 w-[300px] h-full bg-white border-b-2 border-opacity-10 border-black transition-[right] duration-300 ease-in-out z-[1000] animate__animated animate__fadeInRight animate__faster"
 	>
 		<div
 			class="flex justify-between items-center p-[20px] border-b-2 border-b-[rgba(0,0,0,0.082)]"
