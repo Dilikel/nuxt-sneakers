@@ -4,6 +4,7 @@ const props = defineProps({
 	title: String,
 	price: Number,
 	imageUrl: String,
+	removeItem: Function,
 })
 const router = useRouter()
 
@@ -28,7 +29,10 @@ const goToSneaker = () => {
 
 			<div class="flex justify-between mt-2">
 				<b class="flex-1">{{ price }} руб.</b>
-				<button class="text-red-500 hover:text-red-700 transition-colors">
+				<button
+					class="text-red-500 hover:text-red-700 transition-colors"
+					@click="removeItem"
+				>
 					Удалить
 				</button>
 			</div>

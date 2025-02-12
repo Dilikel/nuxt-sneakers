@@ -4,6 +4,8 @@ import CartItem from './CartItem.vue'
 const props = defineProps({
 	items: Array,
 })
+
+const emit = defineEmits(['removeFromCart'])
 </script>
 
 <template>
@@ -15,6 +17,7 @@ const props = defineProps({
 			:title="item.title"
 			:price="item.price"
 			:imageUrl="item.imageUrl"
+			:removeItem="() => emit('removeFromCart', item)"
 		/>
 	</div>
 </template>

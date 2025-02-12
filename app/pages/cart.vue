@@ -1,17 +1,17 @@
 <script setup>
-import { useTotalPriceStore } from '~/stores/totalPrice'
-import { storeToRefs } from 'pinia'
 import CartItemList from '~/components/Cart/CartItemList.vue'
+import { useCartStore } from '~/stores/cart'
+
+useHead({
+	title: 'Корзина',
+})
 
 const cart = ref([])
-const totalPriceStore = useTotalPriceStore()
-const { totalPrice } = storeToRefs(totalPriceStore)
+const cartStore = useCartStore()
+const { totalPrice } = storeToRefs(cartStore)
 
 onMounted(() => {
-	const localCart = localStorage.getItem('cart')
-	if (localCart) {
-		cart.value = JSON.parse(localCart)
-	}
+	cart.value = cartStore.cart
 })
 </script>
 
@@ -25,7 +25,10 @@ onMounted(() => {
 				</h2>
 			</div>
 
-			<CartItemList :items="cart" />
+			<CartItemList
+				:items="cart"
+				@remove-from-cart="cartStore.removeCartItem"
+			/>
 
 			<div
 				class="flex justify-between items-center bg-white p-6 border border-slate-200 mt-8 rounded-xl"

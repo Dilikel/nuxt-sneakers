@@ -1,7 +1,7 @@
 <script setup>
 import CardList from '~/components/Home/CardList.vue'
 import Loader from '~/components/Loader.vue'
-import { useTotalPriceStore } from '~/stores/totalPrice'
+import { useCartStore } from '~/stores/cart'
 
 useHead({
 	title: 'Главная',
@@ -10,12 +10,12 @@ useHead({
 const config = useRuntimeConfig()
 const items = ref([])
 const isLoading = ref(true)
-const totalPriceStore = useTotalPriceStore()
+const cartStore = useCartStore()
+
 const filters = reactive({
 	sortBy: 'title',
 	searchQuery: '',
 })
-const cart = ref([])
 
 async function fetchItems() {
 	const params = {
@@ -33,7 +33,6 @@ async function fetchItems() {
 				...obj,
 				isFavorite: false,
 				favoriteId: null,
-				isAdded: cart.value.some(item => item.id === obj.id),
 			}))
 		})
 		.catch(error => {
@@ -52,32 +51,7 @@ const onChangeSearchInput = event => {
 	filters.searchQuery = event.target.value
 }
 
-const onClickAddPlus = item => {
-	if (!item.isAdded) {
-		cart.value.push({ ...item, isAdded: true })
-		item.isAdded = true
-	} else {
-		cart.value = cart.value.filter(cartItem => cartItem.id !== item.id)
-		item.isAdded = false
-	}
-}
-
-watch(
-	cart,
-	() => {
-		localStorage.setItem('cart', JSON.stringify(cart.value))
-		totalPriceStore.updatePrice(
-			cart.value.reduce((acc, item) => acc + item.price, 0)
-		)
-	},
-	{ deep: true }
-)
-
 onMounted(async () => {
-	const localCart = localStorage.getItem('cart')
-	if (localCart) {
-		cart.value = JSON.parse(localCart)
-	}
 	await fetchItems()
 })
 
@@ -121,7 +95,7 @@ watch(filters, async () => {
 		<CardList
 			:items="items"
 			:isFavorites="false"
-			@add-to-cart="onClickAddPlus"
+			@add-to-cart="cartStore.toggleCartItem"
 		/>
 	</div>
 </template>

@@ -1,9 +1,11 @@
 <script setup>
+import { computed } from 'vue'
 import like1 from '~/assets/icons/like-1.svg'
 import like2 from '~/assets/icons/like-2.svg'
 import plusIcon from '~/assets/icons/plus.svg'
 import checkedIcon from '~/assets/icons/checked.svg'
 import { useRouter } from 'vue-router'
+import { useCartStore } from '~/stores/cart'
 
 const props = defineProps({
 	id: Number,
@@ -11,14 +13,18 @@ const props = defineProps({
 	imageUrl: String,
 	price: Number,
 	isFavorite: Boolean,
-	isAdded: Boolean,
 	onClickFavorite: Function,
 	onClickAdd: Function,
 })
+
 const router = useRouter()
+const cartStore = useCartStore()
+
 const goToSneaker = () => {
 	router.push(`/sneaker/${props.id}`)
 }
+
+const isAdded = computed(() => cartStore.isInCart(props.id))
 </script>
 
 <template>
@@ -47,8 +53,7 @@ const goToSneaker = () => {
 			</div>
 
 			<NuxtImg
-				v-if="onClickAdd"
-				@click="onClickAdd"
+				@click="cartStore.toggleCartItem({ id, title, imageUrl, price })"
 				:src="isAdded ? checkedIcon : plusIcon"
 				alt="Add"
 				class="card__add"

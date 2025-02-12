@@ -1,36 +1,56 @@
-<script setup lang="ts">
+<script setup>
 import Loader from '@/components/Loader.vue'
-import type { sneaker } from '~/types/sneaker'
+import { useCartStore } from '~/stores/cart'
+import { ref, computed, watchEffect, onMounted } from 'vue'
+import { useRoute, useRuntimeConfig } from 'nuxt/app'
 
-const sneaker = ref<Partial<sneaker>>({})
-const isLoading = ref(true)
+const cartStore = useCartStore()
+const route = useRoute()
 const config = useRuntimeConfig()
 
-watchEffect(() => {
-	if (sneaker.value.title) {
-		useHead({
-			title: sneaker.value.title,
-		})
-	}
+const sneaker = ref({
+	id: 0,
+	title: '',
+	imageUrl: '',
+	price: 0,
+	isFavorite: false,
 })
 
-async function fetchSneaker() {
-	await $fetch<sneaker>(
-		`${config.public.API_URL}/items/${useRoute().params.id}`
-	)
-		.then((response: sneaker) => {
-			sneaker.value = response
-		})
-		.catch((error: any) => {
-			console.log(error)
-		})
-		.finally(() => {
-			isLoading.value = false
-		})
+const isAdded = computed(() => cartStore.isInCart(sneaker.value.id))
+
+const toggleCartItem = () => {
+	cartStore.toggleCartItem({
+		id: sneaker.value.id,
+		title: sneaker.value.title,
+		imageUrl: sneaker.value.imageUrl,
+		price: sneaker.value.price,
+	})
 }
 
-onMounted(() => {
-	fetchSneaker()
+const toggleFavorite = () => {
+	sneaker.value.isFavorite = !sneaker.value.isFavorite
+}
+
+const isLoading = ref(true)
+
+async function fetchSneaker() {
+	try {
+		const response = await $fetch(
+			`${config.public.API_URL}/items/${route.params.id}`
+		)
+		sneaker.value = response
+	} catch (error) {
+		console.error('Ошибка при загрузке товара:', error)
+	} finally {
+		isLoading.value = false
+	}
+}
+
+onMounted(fetchSneaker)
+watchEffect(() => {
+	if (sneaker.value.title) {
+		useHead({ title: sneaker.value.title })
+	}
 })
 </script>
 
@@ -49,7 +69,7 @@ onMounted(() => {
 							class="w-full h-full object-cover select-none min-h-[512px] max-md:min-h-[302px]"
 						/>
 						<button
-							@click="sneaker.isFavorite = !sneaker.isFavorite"
+							@click="toggleFavorite"
 							class="absolute top-4 right-4 p-3 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
 						>
 							<svg
@@ -87,23 +107,19 @@ onMounted(() => {
 						</div>
 						<div class="flex flex-col space-y-4">
 							<button
-								@click="sneaker.isAdded = !sneaker.isAdded"
+								@click="toggleCartItem"
 								:class="{
 									'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700':
-										!sneaker.isAdded,
+										!isAdded,
 									'bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700':
-										sneaker.isAdded,
+										isAdded,
 								}"
 								class="w-full px-6 py-3 text-white font-semibold rounded-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
 							>
-								{{
-									sneaker.isAdded
-										? 'Добавлено в корзину 🛒'
-										: 'Добавить в корзину'
-								}}
+								{{ isAdded ? 'Добавлено в корзину 🛒' : 'Добавить в корзину' }}
 							</button>
 							<button
-								@click="sneaker.isFavorite = !sneaker.isFavorite"
+								@click="toggleFavorite"
 								:class="{
 									'bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700':
 										!sneaker.isFavorite,

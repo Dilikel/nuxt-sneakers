@@ -1,11 +1,11 @@
 <script setup>
-import { useTotalPriceStore } from '~/stores/totalPrice'
+import { useCartStore } from '~/stores/cart'
 import { storeToRefs } from 'pinia'
 
-const isMenuOpen = ref(false)
-const totalPriceStore = useTotalPriceStore()
-const { totalPrice } = storeToRefs(totalPriceStore)
+const cartStore = useCartStore()
+const { totalPrice } = storeToRefs(cartStore)
 </script>
+
 <template>
 	<header
 		class="py-[20px] border-b-2 border-b-solid border-b-[rgba(0,0,0,0.082)] sticky top-0 bg-white z-50"
