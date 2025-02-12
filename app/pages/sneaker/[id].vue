@@ -60,7 +60,10 @@ watchEffect(() => {
 
 <template>
 	<Loader v-if="isLoading" />
-	<div v-else class="min-h-[100vh] bg-gradient-to-br py-12">
+	<div
+		v-else
+		class="min-h-[100vh] bg-gradient-to-br py-12 animate__animated animate__fadeIn"
+	>
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div
 				class="bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all"

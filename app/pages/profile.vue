@@ -39,7 +39,7 @@ onMounted(() => {
 	<Loader v-if="!user?.id" />
 	<div
 		v-else
-		class="flex items-center justify-center min-h-[80vh] py-6 px-4 sm:px-6 lg:px-8"
+		class="flex items-center justify-center min-h-[80vh] py-6 px-4 sm:px-6 lg:px-8 animate__animated animate__fadeIn"
 	>
 		<div
 			class="max-w-3xl w-full bg-white rounded-xl shadow-lg p-8 md:p-12 border border-gray-200"

@@ -18,7 +18,7 @@ onMounted(() => {
 
 <template>
 	<div
-		class="max-w-[1400px] w-full px-5 mx-auto min-h-screen flex flex-col items-center py-5"
+		class="max-w-[1400px] w-full px-5 mx-auto min-h-screen flex flex-col items-center py-5 animate__animated animate__fadeIn"
 	>
 		<h1 class="text-3xl md:text-5xl font-bold text-gray-800 mb-8 text-center">
 			Закладки
