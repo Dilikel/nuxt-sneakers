@@ -16,7 +16,10 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="min-h-[100vh] py-12 animate__animated animate__fadeIn">
+	<div
+		class="min-h-[100vh] py-12 animate__animated animate__fadeIn"
+		v-auto-animate
+	>
 		<div
 			v-if="cart.length === 0"
 			class="flex flex-col items-center justify-center min-h-[60vh] p-6"
