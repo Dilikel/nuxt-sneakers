@@ -1,22 +1,23 @@
 <script setup>
 import Loader from '@/components/Loader.vue'
 import { useCartStore } from '~/stores/cart'
-import { ref, computed, watchEffect, onMounted } from 'vue'
-import { useRoute, useRuntimeConfig } from 'nuxt/app'
+import { useFavoriteStore } from '~/stores/favorite'
 
 const cartStore = useCartStore()
 const route = useRoute()
 const config = useRuntimeConfig()
+const favoriteStore = useFavoriteStore()
+const isLoading = ref(true)
 
 const sneaker = ref({
 	id: 0,
 	title: '',
 	imageUrl: '',
 	price: 0,
-	isFavorite: false,
 })
 
 const isAdded = computed(() => cartStore.isInCart(sneaker.value.id))
+const isFavorite = computed(() => favoriteStore.isInFavorite(sneaker.value.id))
 
 const toggleCartItem = () => {
 	cartStore.toggleCartItem({
@@ -27,11 +28,14 @@ const toggleCartItem = () => {
 	})
 }
 
-const toggleFavorite = () => {
-	sneaker.value.isFavorite = !sneaker.value.isFavorite
+const toggleFavoriteItem = () => {
+	favoriteStore.toggleFavoriteItem({
+		id: sneaker.value.id,
+		title: sneaker.value.title,
+		imageUrl: sneaker.value.imageUrl,
+		price: sneaker.value.price,
+	})
 }
-
-const isLoading = ref(true)
 
 async function fetchSneaker() {
 	try {
@@ -69,15 +73,15 @@ watchEffect(() => {
 							class="w-full h-full object-cover select-none min-h-[512px] max-md:min-h-[302px]"
 						/>
 						<button
-							@click="toggleFavorite"
+							@click="toggleFavoriteItem"
 							class="absolute top-4 right-4 p-3 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="h-6 w-6"
 								:class="{
-									'text-red-500 fill-current': sneaker.isFavorite,
-									'text-gray-300': !sneaker.isFavorite,
+									'text-red-500 fill-current': isFavorite,
+									'text-gray-300': !isFavorite,
 								}"
 								viewBox="0 0 24 24"
 								stroke="currentColor"
@@ -119,18 +123,16 @@ watchEffect(() => {
 								{{ isAdded ? 'Добавлено в корзину 🛒' : 'Добавить в корзину' }}
 							</button>
 							<button
-								@click="toggleFavorite"
+								@click="toggleFavoriteItem"
 								:class="{
 									'bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700':
-										!sneaker.isFavorite,
+										!isFavorite,
 									'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700':
-										sneaker.isFavorite,
+										isFavorite,
 								}"
 								class="w-full px-6 py-3 text-white font-semibold rounded-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
 							>
-								{{
-									sneaker.isFavorite ? 'В избранном ❤️' : 'Добавить в избранное'
-								}}
+								{{ isFavorite ? 'В избранном ❤️' : 'Добавить в избранное' }}
 							</button>
 						</div>
 					</div>

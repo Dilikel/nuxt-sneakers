@@ -31,12 +31,13 @@ const { totalPrice } = storeToRefs(cartStore)
 					<img src="~/assets/icons/cart.svg" alt="Cart" class="select-none" />
 					<b>{{ totalPrice }} руб.</b>
 				</router-link>
-				<li
+				<router-link
+					to="/favorite"
 					class="flex items-center gap-3 cursor-pointer text-gray-500 transition-colors duration-300 ease-in-out hover:text-black"
 				>
 					<img src="~/assets/icons/heart.svg" alt="Cart" class="select-none" />
 					<span>Закладки</span>
-				</li>
+				</router-link>
 
 				<router-link
 					to="/profile"
@@ -106,10 +107,13 @@ const { totalPrice } = storeToRefs(cartStore)
 				<img src="~/assets/icons/cart.svg" alt="Cart" />
 				<span>Корзина</span>
 			</router-link>
-			<li class="flex items-center gap-3 py-[15px] text-[#4a5568]">
+			<router-link
+				to="/favorite"
+				class="flex items-center gap-3 py-[15px] text-[#4a5568]"
+			>
 				<img src="~/assets/icons/heart.svg" alt="Cart" />
 				<span>Закладки</span>
-			</li>
+			</router-link>
 			<router-link
 				to="/profile"
 				@click="isMenuOpen = false"

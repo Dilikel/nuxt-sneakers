@@ -18,7 +18,7 @@ onMounted(() => {
 <template>
 	<div class="min-h-[100vh] py-12">
 		<div class="max-w-[1400px] mx-auto px-6 lg:px-8">
-			<div class="flex items-center justify-between mb-6">
+			<div class="flex items-center justify-between mb-6 max-md:flex-col">
 				<h1 class="text-4xl font-semibold text-gray-900">Корзина</h1>
 				<h2 class="text-xl font-medium text-gray-600">
 					Сумма заказа: {{ totalPrice }} ₽

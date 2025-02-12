@@ -2,6 +2,7 @@
 import CardList from '~/components/Home/CardList.vue'
 import Loader from '~/components/Loader.vue'
 import { useCartStore } from '~/stores/cart'
+import { useFavoriteStore } from '~/stores/favorite'
 
 useHead({
 	title: 'Главная',
@@ -11,6 +12,7 @@ const config = useRuntimeConfig()
 const items = ref([])
 const isLoading = ref(true)
 const cartStore = useCartStore()
+const favoriteStore = useFavoriteStore()
 
 const filters = reactive({
 	sortBy: 'title',
@@ -29,11 +31,7 @@ async function fetchItems() {
 		params,
 	})
 		.then(response => {
-			items.value = response.map(obj => ({
-				...obj,
-				isFavorite: false,
-				favoriteId: null,
-			}))
+			items.value = response
 		})
 		.catch(error => {
 			console.error(error)
@@ -96,6 +94,7 @@ watch(filters, async () => {
 			:items="items"
 			:isFavorites="false"
 			@add-to-cart="cartStore.toggleCartItem"
+			@add-to-favorite="favoriteStore.toggleFavoriteItem"
 		/>
 	</div>
 </template>

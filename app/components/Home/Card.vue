@@ -6,25 +6,27 @@ import plusIcon from '~/assets/icons/plus.svg'
 import checkedIcon from '~/assets/icons/checked.svg'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '~/stores/cart'
+import { useFavoriteStore } from '~/stores/favorite'
 
 const props = defineProps({
 	id: Number,
 	title: String,
 	imageUrl: String,
 	price: Number,
-	isFavorite: Boolean,
 	onClickFavorite: Function,
 	onClickAdd: Function,
 })
 
 const router = useRouter()
 const cartStore = useCartStore()
+const favoriteStore = useFavoriteStore()
 
 const goToSneaker = () => {
 	router.push(`/sneaker/${props.id}`)
 }
 
 const isAdded = computed(() => cartStore.isInCart(props.id))
+const isFavorite = computed(() => favoriteStore.isInFavorite(props.id))
 </script>
 
 <template>
