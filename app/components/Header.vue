@@ -98,10 +98,14 @@ const { totalPrice } = storeToRefs(cartStore)
 			</svg>
 		</div>
 		<ul class="list-none p-[20px] m-0">
-			<li class="flex items-center gap-3 py-[15px] text-[#4a5568]">
+			<router-link
+				to="/cart"
+				class="flex items-center gap-3 py-[15px] text-[#4a5568]"
+				@click="isMenuOpen = false"
+			>
 				<img src="~/assets/icons/cart.svg" alt="Cart" />
 				<span>Корзина</span>
-			</li>
+			</router-link>
 			<li class="flex items-center gap-3 py-[15px] text-[#4a5568]">
 				<img src="~/assets/icons/heart.svg" alt="Cart" />
 				<span>Закладки</span>
