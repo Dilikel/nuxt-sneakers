@@ -82,6 +82,8 @@ const isFavorite = computed(() => favoriteStore.isInFavorite(props.id))
 	height: auto;
 	border-radius: 12px;
 	transition: transform 0.3s ease;
+	max-height: 190px;
+	min-height: 190px;
 }
 
 img {
@@ -155,6 +157,11 @@ img {
 	.card {
 		padding: 12px;
 		max-width: 100%;
+	}
+
+	.card__image {
+		max-height: 130px;
+		min-height: 130px;
 	}
 
 	.card__title {
