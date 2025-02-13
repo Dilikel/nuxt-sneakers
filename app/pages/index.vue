@@ -62,7 +62,7 @@ watch(filters, async () => {
 	<Loader v-if="isLoading" />
 	<div
 		v-else
-		class="max-w-[1400px] w-full px-5 mx-auto min-h-[100vh] animate__animated animate__fadeIn"
+		class="max-w-[1400px] w-full px-5 mx-auto min-h-[100vh] animate__animated animate__fadeIn animate__faster"
 	>
 		<h2
 			class="text-2xl font-bold mt-[10px] mb-[10px] text-center text-gray-800"

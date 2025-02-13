@@ -39,11 +39,14 @@ export const useCartStore = defineStore('cart', () => {
 		cart.value.reduce((acc, item) => acc + item.price, 0)
 	)
 
+	const cartCount = computed(() => cart.value.length)
+
 	return {
 		cart,
 		toggleCartItem,
 		isInCart,
 		totalPrice,
 		removeCartItem,
+		cartCount,
 	}
 })

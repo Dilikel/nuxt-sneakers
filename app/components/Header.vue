@@ -1,10 +1,13 @@
 <script setup>
 import { useCartStore } from '~/stores/cart'
+import { useFavoriteStore } from '~/stores/favorite'
 import { storeToRefs } from 'pinia'
 
 const isMenuOpen = ref(false)
 const cartStore = useCartStore()
-const { totalPrice } = storeToRefs(cartStore)
+const favoriteStore = useFavoriteStore()
+const { totalPrice, cartCount } = storeToRefs(cartStore)
+const { favoriteCount } = storeToRefs(favoriteStore)
 </script>
 
 <template>
@@ -24,21 +27,48 @@ const { totalPrice } = storeToRefs(cartStore)
 				</div>
 			</router-link>
 			<ul class="flex items-center list-none gap-[40px] m-0 p-0 max-md:hidden">
-				<router-link
-					to="/cart"
-					class="flex items-center gap-3 cursor-pointer text-gray-500 transition-colors duration-300 ease-in-out hover:text-black"
-				>
-					<img src="~/assets/icons/cart.svg" alt="Cart" class="select-none" />
-					<b>{{ totalPrice }} руб.</b>
+				<router-link to="/cart" class="relative group">
+					<div
+						class="flex items-center gap-3 cursor-pointer text-gray-500 transition-all duration-300 ease-in-out group-hover:text-black"
+					>
+						<div class="relative">
+							<img
+								src="~/assets/icons/cart.svg"
+								alt="Bookmarks"
+								class="select-none w-6 h-6"
+							/>
+							<transition v-if="cartCount">
+								<div
+									class="absolute -top-3 -right-3 bg-red-500 text-white w-5 h-5 text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate__animated animate__fadeIn animate__faster"
+								>
+									{{ cartCount }}
+								</div>
+							</transition>
+						</div>
+						<b>{{ totalPrice }} руб.</b>
+					</div>
 				</router-link>
-				<router-link
-					to="/favorite"
-					class="flex items-center gap-3 cursor-pointer text-gray-500 transition-colors duration-300 ease-in-out hover:text-black"
-				>
-					<img src="~/assets/icons/heart.svg" alt="Cart" class="select-none" />
-					<span>Закладки</span>
+				<router-link to="/favorite" class="relative group">
+					<div
+						class="flex items-center gap-3 cursor-pointer text-gray-500 transition-all duration-300 ease-in-out group-hover:text-black"
+					>
+						<div class="relative">
+							<img
+								src="~/assets/icons/heart.svg"
+								alt="Bookmarks"
+								class="select-none w-6 h-6"
+							/>
+							<transition v-if="favoriteCount">
+								<div
+									class="absolute -top-3 -right-3 bg-red-500 text-white w-5 h-5 text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate__animated animate__fadeIn animate__faster"
+								>
+									{{ favoriteCount }}
+								</div>
+							</transition>
+						</div>
+						<span class="font-medium text-lg">Закладки</span>
+					</div>
 				</router-link>
-
 				<router-link
 					to="/profile"
 					class="flex items-center gap-3 cursor-pointer text-gray-500 transition-colors duration-300 ease-in-out hover:text-black"

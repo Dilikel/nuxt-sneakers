@@ -39,10 +39,13 @@ export const useFavoriteStore = defineStore('favorite', () => {
 		return favorite.value.some(item => item.id === id)
 	})
 
+	const favoriteCount = computed(() => favorite.value.length)
+
 	return {
 		favorite,
 		toggleFavoriteItem,
 		isInFavorite,
 		removeFavoriteItem,
+		favoriteCount,
 	}
 })

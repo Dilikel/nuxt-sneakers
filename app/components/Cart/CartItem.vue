@@ -18,7 +18,7 @@ const goToSneaker = () => {
 		class="flex items-center border border-slate-200 p-5 rounded-xl gap-4 w-full"
 	>
 		<img
-			class="w-16 h-16 cursor-pointer"
+			class="w-16 h-16 cursor-pointer select-none"
 			:src="imageUrl"
 			:alt="title"
 			@click="goToSneaker"
