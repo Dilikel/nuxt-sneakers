@@ -110,6 +110,7 @@ const { totalPrice } = storeToRefs(cartStore)
 			<router-link
 				to="/favorite"
 				class="flex items-center gap-3 py-[15px] text-[#4a5568]"
+				@click="isMenuOpen = false"
 			>
 				<img src="~/assets/icons/heart.svg" alt="Cart" />
 				<span>Закладки</span>
