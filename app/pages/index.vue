@@ -86,7 +86,7 @@ watch(filters, async () => {
 			</div>
 			<select
 				@change="onChangeSelect"
-				class="border px-3 py-2 rounded-md max-md:w-full border-gray-300 focus:outline-none"
+				class="border px-3 py-2 rounded-md max-md:w-full border-gray-300 focus:outline-none bg-white"
 			>
 				<option value="title">По названию</option>
 				<option value="price">По цене (дешевые)</option>
