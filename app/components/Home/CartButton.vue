@@ -8,7 +8,7 @@ const { totalPrice, cartCount } = storeToRefs(cartStore)
 
 <template>
 	<div
-		class="fixed bottom-5 right-5 z-50 bg-white shadow-lg rounded-full p-2 transition-all duration-300 ease-in-out hover:scale-110"
+		class="fixed bottom-5 right-5 z-50 bg-white shadow-lg rounded-full transition-all duration-300 ease-in-out hover:scale-110 p-3"
 	>
 		<router-link to="/cart" class="flex items-center gap-2">
 			<div class="relative">
