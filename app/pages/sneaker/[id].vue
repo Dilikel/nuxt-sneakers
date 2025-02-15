@@ -1,5 +1,6 @@
 <script setup>
 import Loader from '@/components/Loader.vue'
+import CartButton from '~/components/Home/CartButton.vue'
 import { useCartStore } from '~/stores/cart'
 import { useFavoriteStore } from '~/stores/favorite'
 
@@ -142,5 +143,6 @@ watchEffect(() => {
 				</div>
 			</div>
 		</div>
+		<CartButton class="hidden max-md:block" />
 	</div>
 </template>

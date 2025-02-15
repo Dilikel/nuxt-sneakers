@@ -39,7 +39,7 @@ const { favoriteCount } = storeToRefs(favoriteStore)
 							/>
 							<transition v-if="cartCount">
 								<div
-									class="absolute -top-3 -right-3 bg-red-500 text-white w-5 h-5 text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate__animated animate__fadeIn animate__faster"
+									class="absolute -top-3 -right-3 bg-red-500 text-white w-5 h-5 text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate__animated animate__fadeIn animate__faster select-none"
 								>
 									{{ cartCount }}
 								</div>
@@ -60,7 +60,7 @@ const { favoriteCount } = storeToRefs(favoriteStore)
 							/>
 							<transition v-if="favoriteCount">
 								<div
-									class="absolute -top-3 -right-3 bg-red-500 text-white w-5 h-5 text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate__animated animate__fadeIn animate__faster"
+									class="absolute -top-3 -right-3 bg-red-500 text-white w-5 h-5 text-xs font-bold rounded-full flex items-center justify-center shadow-lg animate__animated animate__fadeIn animate__faster select-none"
 								>
 									{{ favoriteCount }}
 								</div>

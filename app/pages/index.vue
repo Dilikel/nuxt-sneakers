@@ -1,6 +1,7 @@
 <script setup>
 import CardList from '~/components/Home/CardList.vue'
 import Loader from '~/components/Loader.vue'
+import CartButton from '~/components/Home/CartButton.vue'
 import { useCartStore } from '~/stores/cart'
 import { useFavoriteStore } from '~/stores/favorite'
 
@@ -99,5 +100,6 @@ watch(filters, async () => {
 			@add-to-cart="cartStore.toggleCartItem"
 			@add-to-favorite="favoriteStore.toggleFavoriteItem"
 		/>
+		<CartButton class="hidden max-md:block" />
 	</div>
 </template>
