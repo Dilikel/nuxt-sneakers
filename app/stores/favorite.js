@@ -1,19 +1,26 @@
 import { defineStore } from 'pinia'
 
 export const useFavoriteStore = defineStore('favorite', () => {
-	const favorite = ref([])
+	const favorite = useState('favorite', () => [])
 	const loadFavorite = () => {
-		const localFavorites = localStorage.getItem('favorite')
-		if (localFavorites) {
-			favorite.value = JSON.parse(localFavorites)
+		if (process.client) {
+			const localFavorites = localStorage.getItem('favorite')
+			if (localFavorites) {
+				favorite.value = JSON.parse(localFavorites)
+			}
 		}
 	}
 
-	loadFavorite()
+	onMounted(() => {
+		loadFavorite()
+	})
+
 	watch(
 		favorite,
 		() => {
-			localStorage.setItem('favorite', JSON.stringify(favorite.value))
+			if (process.client) {
+				localStorage.setItem('favorite', JSON.stringify(favorite.value))
+			}
 		},
 		{ deep: true }
 	)

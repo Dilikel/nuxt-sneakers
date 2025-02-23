@@ -1,20 +1,26 @@
 import { defineStore } from 'pinia'
-import { computed, ref, watch } from 'vue'
 
 export const useCartStore = defineStore('cart', () => {
-	const cart = ref([])
+	const cart = useState('cart', () => [])
 	const loadCart = () => {
-		const localCart = localStorage.getItem('cart')
-		if (localCart) {
-			cart.value = JSON.parse(localCart)
+		if (process.client) {
+			const localCart = localStorage.getItem('cart')
+			if (localCart) {
+				cart.value = JSON.parse(localCart)
+			}
 		}
 	}
 
-	loadCart()
+	onMounted(() => {
+		loadCart()
+	})
+
 	watch(
 		cart,
 		() => {
-			localStorage.setItem('cart', JSON.stringify(cart.value))
+			if (process.client) {
+				localStorage.setItem('cart', JSON.stringify(cart.value))
+			}
 		},
 		{ deep: true }
 	)

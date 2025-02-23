@@ -1,6 +1,7 @@
 <script setup>
 import CartItemList from '~/components/Cart/CartItemList.vue'
 import { useCartStore } from '~/stores/cart'
+import { useToast } from 'vue-toastification'
 
 useHead({
 	title: 'Корзина',
@@ -9,6 +10,33 @@ useHead({
 const cart = ref([])
 const cartStore = useCartStore()
 const { totalPrice } = storeToRefs(cartStore)
+const toast = useToast()
+const isLoading = ref(false)
+
+async function SubmitOrder() {
+	isLoading.value = true
+	const orderId = Math.random().toString(36).substr(2, 9)
+	await $fetch('api/make-order', {
+		method: 'POST',
+		body: JSON.stringify({
+			amount: {
+				value: totalPrice.value.toString(),
+				currency: 'RUB',
+			},
+			order_id: orderId,
+		}),
+	})
+		.then(response => {
+			window.open(response.confirmation.confirmation_url, '_blank')
+		})
+		.catch(error => {
+			console.error('Ошибка при оформлении заказа:', error)
+			toast.error('Произошла ошибка при оформлении заказа.')
+		})
+		.finally(() => {
+			isLoading.value = false
+		})
+}
 
 onMounted(() => {
 	cart.value = cartStore.cart
@@ -65,8 +93,9 @@ onMounted(() => {
 				<div class="flex justify-center mt-8">
 					<button
 						class="flex items-center gap-2 bg-blue-500 px-4 py-2 rounded-lg text-white transition hover:bg-blue-600 shadow-lg"
+						@click="SubmitOrder"
 					>
-						Перейти к оформлению
+						{{ isLoading ? 'Загрузка...' : 'Оформить заказ' }}
 					</button>
 				</div>
 			</div>
