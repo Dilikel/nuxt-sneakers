@@ -15,7 +15,7 @@ const isLoading = ref(false)
 
 async function SubmitOrder() {
 	isLoading.value = true
-	const orderId = Math.random().toString(36).substr(2, 9)
+	const orderId = Math.random().toString(36).substring(7)
 	await $fetch('api/make-order', {
 		method: 'POST',
 		body: JSON.stringify({
@@ -27,7 +27,7 @@ async function SubmitOrder() {
 		}),
 	})
 		.then(response => {
-			window.open(response.confirmation.confirmation_url, '_blank')
+			window.open(response, '_blank')
 		})
 		.catch(error => {
 			console.error('Ошибка при оформлении заказа:', error)

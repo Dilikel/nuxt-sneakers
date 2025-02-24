@@ -40,7 +40,7 @@ export default defineEventHandler(async event => {
 				description: `Оплата заказа №${order_id}`,
 			}),
 		})
-		return response
+		return response.confirmation.confirmation_url
 	} catch (error) {
 		console.error('YooKassa API error:', error)
 
