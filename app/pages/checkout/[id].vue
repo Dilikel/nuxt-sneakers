@@ -23,6 +23,11 @@ async function fetchOrderStatus() {
 		const payment_id = order.payment_id
 		const response = await $fetch(`/api/order-status/${payment_id}`)
 		orderStatus.value = response.status
+		if (orderStatus.value === 'succeeded') {
+			orderStore.changeStatus(orderId, orderStatus.value)
+		} else if (orderStatus.value === 'canceled') {
+			orderStore.changeStatus(orderId, orderStatus.value)
+		}
 	} catch (error) {
 		console.error('Ошибка при получении статуса заказа:', error)
 		toast.error('Не удалось получить статус заказа.')
@@ -74,7 +79,7 @@ onUnmounted(() => {
 					✅ Оплачен
 				</p>
 				<p
-					v-else-if="orderStatus === 'failed'"
+					v-else-if="orderStatus === 'canceled'"
 					class="text-lg font-semibold text-red-600 flex items-center justify-center gap-2"
 				>
 					❌ Ошибка оплаты

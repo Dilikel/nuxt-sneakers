@@ -34,6 +34,7 @@ async function SubmitOrder() {
 				orderId: orderId,
 				payment_id: response.payment_id,
 				totalPrice: totalPrice.value,
+				status: 'pending',
 			})
 			cartStore.cart = []
 			toast.success('Заказ успешно оформлен!')

@@ -12,6 +12,15 @@ export const useOrderStore = defineStore('order', {
 			this.orders.push(order)
 			this.saveOrdersToLocalStorage()
 		},
+		changeStatus(orderId, newStatus) {
+			const order = this.orders.find(order => order.orderId === orderId)
+			if (order) {
+				order.status = newStatus
+				this.saveOrdersToLocalStorage()
+			} else {
+				console.warn(`Заказ с ID ${orderId} не найден`)
+			}
+		},
 		saveOrdersToLocalStorage() {
 			if (process.client) {
 				localStorage.setItem('orders', JSON.stringify(this.orders))
