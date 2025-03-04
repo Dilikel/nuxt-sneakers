@@ -17,6 +17,7 @@ export default defineEventHandler(async event => {
 		const shopId = process.env.YOOKASSA_SHOP_ID
 		const secretKey = process.env.YOOKASSA_SECRET_KEY
 		const idempotenceKey = Math.random().toString(36).substring(7)
+		const host_url = process.env.HOST_URL
 
 		const response = await $fetch('https://api.yookassa.ru/v3/payments', {
 			method: 'POST',
@@ -35,12 +36,15 @@ export default defineEventHandler(async event => {
 				capture: true,
 				confirmation: {
 					type: 'redirect',
-					return_url: 'http://localhost:3000/',
+					return_url: `${host_url}/checkout/${order_id}`,
 				},
 				description: `Оплата заказа №${order_id}`,
 			}),
 		})
-		return response.confirmation.confirmation_url
+		return {
+			payment_url: response.confirmation.confirmation_url,
+			payment_id: response.id,
+		}
 	} catch (error) {
 		console.error('YooKassa API error:', error)
 

@@ -2,6 +2,7 @@
 import CartItemList from '~/components/Cart/CartItemList.vue'
 import { useCartStore } from '~/stores/cart'
 import { useToast } from 'vue-toastification'
+import { useOrderStore } from '~/stores/order'
 
 useHead({
 	title: 'Корзина',
@@ -12,6 +13,7 @@ const cartStore = useCartStore()
 const { totalPrice } = storeToRefs(cartStore)
 const toast = useToast()
 const isLoading = ref(false)
+const orderStore = useOrderStore()
 
 async function SubmitOrder() {
 	isLoading.value = true
@@ -27,7 +29,15 @@ async function SubmitOrder() {
 		}),
 	})
 		.then(response => {
-			window.open(response, '_blank')
+			window.open(response.payment_url, '_blank')
+			orderStore.addOrder({
+				orderId: orderId,
+				payment_id: response.payment_id,
+				totalPrice: totalPrice.value,
+			})
+			cartStore.cart = []
+			toast.success('Заказ успешно оформлен!')
+			navigateTo(`/checkout/${orderId}`)
 		})
 		.catch(error => {
 			console.error('Ошибка при оформлении заказа:', error)
