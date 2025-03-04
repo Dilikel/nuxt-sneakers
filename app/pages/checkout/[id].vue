@@ -2,7 +2,7 @@
 import { useToast } from 'vue-toastification'
 import Loader from '~/components/Loader.vue'
 import { useOrderStore } from '~/stores/order'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted, watchEffect } from 'vue'
 
 const route = useRoute()
 const toast = useToast()
@@ -11,6 +11,12 @@ const orderStatus = ref('pending')
 const isLoading = ref(true)
 const orderStore = useOrderStore()
 let interval = null
+
+const statusTranslations = {
+	pending: 'Ожидает оплаты',
+	succeeded: 'Оплачен',
+	canceled: 'Ошибка оплаты',
+}
 
 async function fetchOrderStatus() {
 	try {
@@ -23,9 +29,7 @@ async function fetchOrderStatus() {
 		const payment_id = order.payment_id
 		const response = await $fetch(`/api/order-status/${payment_id}`)
 		orderStatus.value = response.status
-		if (orderStatus.value === 'succeeded') {
-			orderStore.changeStatus(orderId, orderStatus.value)
-		} else if (orderStatus.value === 'canceled') {
+		if (orderStatus.value === 'succeeded' || orderStatus.value === 'canceled') {
 			orderStore.changeStatus(orderId, orderStatus.value)
 		}
 	} catch (error) {
@@ -43,6 +47,16 @@ onMounted(() => {
 
 onUnmounted(() => {
 	clearInterval(interval)
+})
+
+watchEffect(() => {
+	if (orderId) {
+		useHead({
+			title: `Статус заказа - ${
+				statusTranslations[orderStatus.value] || 'Неизвестно'
+			}`,
+		})
+	}
 })
 </script>
 
