@@ -5,7 +5,13 @@ export default defineNuxtConfig({
 			charset: 'utf-8',
 			viewport: 'width=device-width, initial-scale=1',
 			title: 'Nuxt Sneakers',
-			link: [{ rel: 'icon', type: 'image/svg+xml', href: '/icons/logo.svg' }],
+			link: [
+				{
+					rel: 'icon',
+					type: 'image/png',
+					href: '/favicon.png',
+				},
+			],
 		},
 	},
 	runtimeConfig: {
@@ -22,6 +28,12 @@ export default defineNuxtConfig({
 	ssr: true,
 	nitro: {
 		preset: 'vercel-edge',
+		publicAssets: [
+			{
+				dir: '../public',
+				baseURL: '/',
+			},
+		],
 	},
 	modules: [
 		'@nuxtjs/tailwindcss',
