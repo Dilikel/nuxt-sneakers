@@ -29,7 +29,7 @@ async function SubmitOrder() {
 		}),
 	})
 		.then(response => {
-			window.open(response.payment_url, '_blank')
+			window.location.replace(response.payment_url)
 			orderStore.addOrder({
 				orderId: orderId,
 				payment_id: response.payment_id,
@@ -37,8 +37,6 @@ async function SubmitOrder() {
 				status: 'pending',
 			})
 			cartStore.cart = []
-			toast.success('Заказ успешно оформлен!')
-			navigateTo(`/checkout/${orderId}`)
 		})
 		.catch(error => {
 			console.error('Ошибка при оформлении заказа:', error)
