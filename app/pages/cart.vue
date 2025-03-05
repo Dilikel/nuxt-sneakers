@@ -35,6 +35,7 @@ async function SubmitOrder() {
 				payment_id: response.payment_id,
 				totalPrice: totalPrice.value,
 				status: 'pending',
+				items: cart.value,
 			})
 			cartStore.cart = []
 		})

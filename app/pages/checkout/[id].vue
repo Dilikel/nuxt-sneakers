@@ -19,6 +19,7 @@ const statusTranslations = {
 async function fetchOrderStatus() {
 	try {
 		orderStore.loadOrdersFromLocalStorage()
+		console.log(orderStore.getOrders)
 		const order = orderStore.getOrders.find(order => order.orderId === orderId)
 		if (!order) {
 			toast.error('Заказ не найден.')
@@ -29,6 +30,9 @@ async function fetchOrderStatus() {
 		orderStatus.value = response.status
 		if (orderStatus.value === 'succeeded' || orderStatus.value === 'canceled') {
 			orderStore.changeStatus(orderId, orderStatus.value)
+			if (orderStatus.value === 'succeeded') {
+				toast.success('Заказ успешно оплачен!')
+			}
 		}
 	} catch (error) {
 		console.error('Ошибка при получении статуса заказа:', error)
