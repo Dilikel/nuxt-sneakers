@@ -2,7 +2,6 @@
 import { useToast } from 'vue-toastification'
 import Loader from '~/components/Loader.vue'
 import { useOrderStore } from '~/stores/order'
-import { ref, onMounted, onUnmounted, watchEffect } from 'vue'
 
 const route = useRoute()
 const toast = useToast()
@@ -10,7 +9,6 @@ const orderId = route.params.id
 const orderStatus = ref('pending')
 const isLoading = ref(true)
 const orderStore = useOrderStore()
-let interval = null
 
 const statusTranslations = {
 	pending: 'Ожидает оплаты',
@@ -42,11 +40,6 @@ async function fetchOrderStatus() {
 
 onMounted(() => {
 	fetchOrderStatus()
-	interval = setInterval(fetchOrderStatus, 5000)
-})
-
-onUnmounted(() => {
-	clearInterval(interval)
 })
 
 watchEffect(() => {
