@@ -3,14 +3,14 @@ import CartItemList from '~/components/Cart/CartItemList.vue'
 import { useCartStore } from '~/stores/cart'
 import { useToast } from 'vue-toastification'
 import { useOrderStore } from '~/stores/order'
+import { storeToRefs } from 'pinia'
 
 useHead({
 	title: 'Корзина',
 })
 
-const cart = ref([])
 const cartStore = useCartStore()
-const { totalPrice } = storeToRefs(cartStore)
+const { cart, totalPrice } = storeToRefs(cartStore)
 const toast = useToast()
 const isLoading = ref(false)
 const orderStore = useOrderStore()
@@ -48,8 +48,8 @@ async function SubmitOrder() {
 		})
 }
 
-onMounted(() => {
-	cart.value = cartStore.cart
+onMounted(async () => {
+	await cartStore.loadCart()
 })
 </script>
 

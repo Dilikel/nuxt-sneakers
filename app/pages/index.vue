@@ -28,7 +28,6 @@ async function fetchItems() {
 		params['title'] = `*${filters.searchQuery}*`
 	}
 	await $fetch(`${config.public.API_URL}/items`, {
-		method: 'GET',
 		params,
 	})
 		.then(response => {

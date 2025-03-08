@@ -2,17 +2,18 @@
 import CardList from '~/components/Home/CardList.vue'
 import { useFavoriteStore } from '~/stores/favorite'
 import { useCartStore } from '~/stores/cart'
+import { storeToRefs } from 'pinia'
 
 useHead({
 	title: 'Закладки',
 })
 
-const favorite = ref([])
 const favoriteStore = useFavoriteStore()
+const { favorite } = storeToRefs(favoriteStore)
 const cartStore = useCartStore()
 
-onMounted(() => {
-	favorite.value = favoriteStore.favorite
+onMounted(async () => {
+	await favoriteStore.loadFavorite()
 })
 </script>
 

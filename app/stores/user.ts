@@ -7,7 +7,9 @@ export const useUserStore = defineStore('UserStore', {
 			id: 0,
 			name: '',
 			email: '',
-			totalPrice: 0,
+			cart: [],
+			favorites: [],
+			orders: [],
 		},
 	}),
 	actions: {
@@ -15,7 +17,14 @@ export const useUserStore = defineStore('UserStore', {
 			this.user = userData
 		},
 		logout() {
-			this.user = { id: 0, name: '', email: '', totalPrice: 0 }
+			this.user = {
+				id: 0,
+				name: '',
+				email: '',
+				cart: [],
+				favorites: [],
+				orders: [],
+			}
 		},
 	},
 	getters: {

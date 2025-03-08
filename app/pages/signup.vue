@@ -43,7 +43,9 @@ async function registerUser() {
 			email: email.value,
 			name: name.value,
 			password: password.value,
-			totalPrice: 0,
+			cart: [],
+			favorites: [],
+			orders: [],
 		},
 	})
 		.then((response: LoginResponse) => {

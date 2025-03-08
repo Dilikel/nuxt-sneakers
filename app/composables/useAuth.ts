@@ -1,18 +1,19 @@
 import { useUserStore } from '@/stores/user'
 import type { LoginResponse } from '~/types/user'
-import { useToast } from 'vue-toastification'
 
 export function useAuth() {
 	const userStore = useUserStore()
 	const config = useRuntimeConfig()
-	const toast = useToast()
 
 	async function fetchUser() {
 		const token = useCookie('token')
 		if (!token.value || token.value.trim() === '') return
 
 		await $fetch<
-			Pick<LoginResponse['data'], 'id' | 'name' | 'email' | 'totalPrice'>
+			Pick<
+				LoginResponse['data'],
+				'id' | 'name' | 'email' | 'cart' | 'favorites' | 'orders'
+			>
 		>(`${config.public.API_URL}/auth_me`, {
 			headers: {
 				'Content-Type': 'application/json',
@@ -24,8 +25,6 @@ export function useAuth() {
 			})
 			.catch((error: any) => {
 				token.value = null
-				toast.error('Ошибка при авторизации')
-				navigateTo('/login')
 			})
 	}
 

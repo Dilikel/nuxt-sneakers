@@ -1,41 +1,64 @@
 import { defineStore } from 'pinia'
+import { useUserStore } from '~/stores/user'
+import { useAuth } from '~/composables/useAuth'
+import { useToast } from 'vue-toastification'
 
 export const useCartStore = defineStore('cart', () => {
+	const config = useRuntimeConfig()
+	const token = useCookie('token')
+	const userStore = useUserStore()
+	const { fetchUser } = useAuth()
+	const toast = useToast()
 	const cart = useState('cart', () => [])
-	const loadCart = () => {
+
+	async function loadCart() {
 		if (process.client) {
-			const localCart = localStorage.getItem('cart')
-			if (localCart) {
-				cart.value = JSON.parse(localCart)
+			if (!token.value) {
+				const localCart = localStorage.getItem('cart')
+				if (localCart) {
+					cart.value = JSON.parse(localCart)
+				}
 			}
+		}
+		if (token.value) {
+			await fetchUser()
+			cart.value = userStore.user.cart
 		}
 	}
 
-	onMounted(() => {
-		loadCart()
-	})
+	async function updateCart() {
+		if (token.value) {
+			await $fetch(`${config.public.API_URL}/users/${userStore.user.id}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token.value}`,
+				},
+				body: { cart: cart.value },
+			})
+				.then(() => {})
+				.catch(error => {
+					console.error(error)
+					toast.error('Произошла ошибка при обновлении корзины.')
+				})
+		}
+	}
 
-	watch(
-		cart,
-		() => {
-			if (process.client) {
-				localStorage.setItem('cart', JSON.stringify(cart.value))
-			}
-		},
-		{ deep: true }
-	)
 	const toggleCartItem = item => {
 		const index = cart.value.findIndex(cartItem => cartItem.id === item.id)
 		if (index === -1) {
 			cart.value.push(item)
+			updateCart()
 		} else {
 			cart.value.splice(index, 1)
+			updateCart()
 		}
 	}
 	const removeCartItem = item => {
 		const index = cart.value.findIndex(cartItem => cartItem.id === item.id)
 		if (index !== -1) {
 			cart.value.splice(index, 1)
+			updateCart()
 		}
 	}
 	const isInCart = computed(() => id => {
@@ -47,7 +70,21 @@ export const useCartStore = defineStore('cart', () => {
 
 	const cartCount = computed(() => cart.value.length)
 
+	loadCart()
+
+	watch(
+		cart,
+		() => {
+			if (process.client) {
+				if (!token.value) {
+					localStorage.setItem('cart', JSON.stringify(cart.value))
+				}
+			}
+		},
+		{ deep: true }
+	)
 	return {
+		loadCart,
 		cart,
 		toggleCartItem,
 		isInCart,

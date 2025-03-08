@@ -2,7 +2,9 @@ export interface User {
 	id: number
 	name: string
 	email: string
-	totalPrice: number
+	cart: Array<any>
+	favorites: Array<any>
+	orders: Array<any>
 }
 
 export interface LoginResponse {
@@ -11,6 +13,8 @@ export interface LoginResponse {
 		id: number
 		name: string
 		email: string
-		totalPrice: number
+		cart: Array<any>
+		favorites: Array<any>
+		orders: Array<any>
 	}
 }

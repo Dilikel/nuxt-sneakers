@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '~/stores/user'
 import { useToast } from 'vue-toastification'
-import { useAuth } from '@/composables/useAuth'
+import { useAuth } from '~/composables/useAuth'
 import Loader from '~/components/Loader.vue'
 
 definePageMeta({
