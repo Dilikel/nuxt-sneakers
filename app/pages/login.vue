@@ -2,6 +2,8 @@
 import { useToast } from 'vue-toastification'
 import { useUserStore } from '~/stores/user'
 import type { LoginResponse } from '~/types/user'
+import { useCartStore } from '~/stores/cart'
+import { useFavoriteStore } from '~/stores/favorite'
 
 definePageMeta({
 	middleware: ['auth'],
@@ -18,6 +20,8 @@ const isLoading = ref(false)
 const config = useRuntimeConfig()
 const toast = useToast()
 const userStore = useUserStore()
+const cartStore = useCartStore()
+const favoriteStore = useFavoriteStore()
 const token = useCookie<string | null>('token', { maxAge: 60 * 60 * 24 * 30 })
 
 async function loginUser() {
@@ -36,6 +40,8 @@ async function loginUser() {
 		.then((response: LoginResponse) => {
 			token.value = response.token
 			userStore.setUser(response.data)
+			cartStore.cart = response.data.cart
+			favoriteStore.favorite = response.data.favorites
 			toast.success('Вы успешно вошли в аккаунт!')
 			navigateTo('/')
 		})

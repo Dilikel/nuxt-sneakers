@@ -50,10 +50,8 @@ export const useFavoriteStore = defineStore('favorite', () => {
 		)
 		if (index === -1) {
 			favorite.value.push(item)
-			updateFavorite()
 		} else {
 			favorite.value.splice(index, 1)
-			updateFavorite()
 		}
 	}
 	const removeFavoriteItem = item => {
@@ -62,7 +60,6 @@ export const useFavoriteStore = defineStore('favorite', () => {
 		)
 		if (index !== -1) {
 			favorite.value.splice(index, 1)
-			updateFavorite()
 		}
 	}
 	const isInFavorite = computed(() => id => {
@@ -71,16 +68,14 @@ export const useFavoriteStore = defineStore('favorite', () => {
 
 	const favoriteCount = computed(() => favorite.value.length)
 
-	onMounted(() => {
-		loadFavorite()
-	})
-
 	watch(
 		favorite,
 		() => {
 			if (process.client) {
 				if (!token.value) {
 					localStorage.setItem('favorite', JSON.stringify(favorite.value))
+				} else {
+					updateFavorite()
 				}
 			}
 		},

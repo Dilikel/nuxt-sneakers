@@ -11,10 +11,6 @@ useHead({
 const favoriteStore = useFavoriteStore()
 const { favorite } = storeToRefs(favoriteStore)
 const cartStore = useCartStore()
-
-onMounted(async () => {
-	await favoriteStore.loadFavorite()
-})
 </script>
 
 <template>

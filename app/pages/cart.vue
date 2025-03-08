@@ -47,10 +47,6 @@ async function SubmitOrder() {
 			isLoading.value = false
 		})
 }
-
-onMounted(async () => {
-	await cartStore.loadCart()
-})
 </script>
 
 <template>

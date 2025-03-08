@@ -1,8 +1,10 @@
-<script setup lang="ts">
+<script setup>
 import { useUserStore } from '~/stores/user'
 import { useToast } from 'vue-toastification'
 import { useAuth } from '~/composables/useAuth'
 import Loader from '~/components/Loader.vue'
+import { useCartStore } from '~/stores/cart'
+import { useFavoriteStore } from '~/stores/favorite'
 
 definePageMeta({
 	middleware: ['auth'],
@@ -15,14 +17,17 @@ useHead({
 const toast = useToast()
 const userStore = useUserStore()
 const user = computed(() => userStore.user)
-
 const token = useCookie('token')
 const { fetchUser } = useAuth()
+const cartStore = useCartStore()
+const favoriteStore = useFavoriteStore()
 
 function logout() {
 	token.value = null
 	userStore.logout()
 	navigateTo('/')
+	cartStore.loadCart()
+	favoriteStore.loadFavorite()
 	toast.success('Вы вышли из аккаунта!')
 }
 

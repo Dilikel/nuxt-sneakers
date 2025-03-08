@@ -48,17 +48,14 @@ export const useCartStore = defineStore('cart', () => {
 		const index = cart.value.findIndex(cartItem => cartItem.id === item.id)
 		if (index === -1) {
 			cart.value.push(item)
-			updateCart()
 		} else {
 			cart.value.splice(index, 1)
-			updateCart()
 		}
 	}
 	const removeCartItem = item => {
 		const index = cart.value.findIndex(cartItem => cartItem.id === item.id)
 		if (index !== -1) {
 			cart.value.splice(index, 1)
-			updateCart()
 		}
 	}
 	const isInCart = computed(() => id => {
@@ -70,14 +67,14 @@ export const useCartStore = defineStore('cart', () => {
 
 	const cartCount = computed(() => cart.value.length)
 
-	loadCart()
-
 	watch(
 		cart,
 		() => {
 			if (process.client) {
 				if (!token.value) {
 					localStorage.setItem('cart', JSON.stringify(cart.value))
+				} else {
+					updateCart()
 				}
 			}
 		},

@@ -1,9 +1,11 @@
+import type { Product } from '@/types/product'
+
 export interface User {
 	id: number
 	name: string
 	email: string
-	cart: Array<any>
-	favorites: Array<any>
+	cart: Product[]
+	favorites: Product[]
 	orders: Array<any>
 }
 
@@ -13,8 +15,8 @@ export interface LoginResponse {
 		id: number
 		name: string
 		email: string
-		cart: Array<any>
-		favorites: Array<any>
+		cart: Product[]
+		favorites: Product[]
 		orders: Array<any>
 	}
 }
