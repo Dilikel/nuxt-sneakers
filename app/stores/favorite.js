@@ -72,11 +72,9 @@ export const useFavoriteStore = defineStore('favorite', () => {
 		favorite,
 		() => {
 			if (process.client) {
-				if (!token.value) {
-					localStorage.setItem('favorite', JSON.stringify(favorite.value))
-				} else {
-					updateFavorite()
-				}
+				token.value
+					? updateFavorite()
+					: localStorage.setItem('favorite', JSON.stringify(favorite.value))
 			}
 		},
 		{ deep: true }

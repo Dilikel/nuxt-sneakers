@@ -71,11 +71,9 @@ export const useCartStore = defineStore('cart', () => {
 		cart,
 		() => {
 			if (process.client) {
-				if (!token.value) {
-					localStorage.setItem('cart', JSON.stringify(cart.value))
-				} else {
-					updateCart()
-				}
+				token.value
+					? updateCart()
+					: localStorage.setItem('cart', JSON.stringify(cart.value))
 			}
 		},
 		{ deep: true }

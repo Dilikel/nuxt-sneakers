@@ -9,6 +9,7 @@ const orderId = route.params.id
 const orderStatus = ref('pending')
 const isLoading = ref(true)
 const orderStore = useOrderStore()
+const token = useCookie('token')
 
 const statusTranslations = {
 	pending: 'Ожидает оплаты',
@@ -18,8 +19,9 @@ const statusTranslations = {
 
 async function fetchOrderStatus() {
 	try {
-		orderStore.loadOrdersFromLocalStorage()
-		console.log(orderStore.getOrders)
+		token.value
+			? orderStore.loadOrdersFromServer()
+			: orderStore.loadOrdersFromLocalStorage()
 		const order = orderStore.getOrders.find(order => order.orderId === orderId)
 		if (!order) {
 			toast.error('Заказ не найден.')
